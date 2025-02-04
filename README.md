@@ -1,14 +1,12 @@
 # Mamlaka Hub and Spoke Payment API (v2)
 
 **Author**  
-Collins Ochieng  
+Collins 
 
 **Email**  
 collins@mam-laka.com  
 
-**Phone**  
-+254794940160  
-254768899729  
+ 
 
 **Base URL**  
 `https://payments.mam-laka.com`
@@ -66,7 +64,7 @@ curl --location 'https://payments.mam-laka.com/api/v1' \
 {
     "message": "Payment initiation successful",
     "secureId": "qdml8553ZeInavKorBHzLA==",
-    "transactionId": "4950-41ad-9820-8559865ca58950703213"
+    "transactionId": ImpadlTdest2",
 }
 
 ```
@@ -74,53 +72,32 @@ curl --location 'https://payments.mam-laka.com/api/v1' \
 
 ```json
 {
-  "Body": {
-    "stkCallback": {
-      "MerchantRequestID": "4950-41ad-9820-8559865ca58950703213",
-      "CheckoutRequestID": "ws_CO_21012025132712034768899729",
-      "ResultCode": 0,
-      "ResultDesc": "The service request is processed successfully.",
-      "CallbackMetadata": {
-        "Item": [
-          {
-            "Name": "Amount",
-            "Value": 1.00
-          },
-          {
-            "Name": "MpesaReceiptNumber",
-            "Value": "NLJ7RT61SV"
-          },
-          {
-            "Name": "TransactionDate",
-            "Value": 20250121132712
-          },
-          {
-            "Name": "PhoneNumber",
-            "Value": 254768899729
-          }
-        ]
-      }
-    }
-  }
+  "amount": 10,
+  "currency": "KES",
+  "externalId": "ImpadlTdest2",
+  "netAmount": 10,
+  "secureId": "ldFuXRQn_JmCVoili4ItEw==",
+  "transactionReport": "",
+  "transactionStatus": "COMPLETE"
 }
+          
 
 ```
 # Callback Failed Transaction   Response 
 
 ```json
 {
-    "Body": {
-      "stkCallback": {
-        "MerchantRequestID": "2697-4453-b07f-ff58b4b1cf417304846",
-        "CheckoutRequestID": "ws_CO_01022025203439198725822504",
-        "ResultCode": 1032,
-        "ResultDesc": "Request cancelled by user"
-      }
-    }
+  "amount": 10,
+  "currency": "KES",
+  "externalId": "ImpadlTdest2",
+  "netAmount": 10,
+  "secureId": "ldFuXRQn_JmCVoili4ItEw==",
+  "transactionReport": "",
+  "transactionStatus": "FAILED"
 }
+
 ```
 
-- **`transactionId`**: This is a unique identifier returned after initiating a payment. Use it to track the transaction status. It will be the same as the **`MerchantRequestID`** provided in the callback. Use this ID to update your records accordingly.
 
 
 ### Money Transfer Alias B2C
@@ -155,61 +132,35 @@ curl --location 'https://payments.mam-laka.com/api/v1' \
 
 ```json
 {
-  "Result": {
-    "ResultType": 0,
-    "ResultCode": 0,
-    "ResultDesc": "The service request is processed successfully.",
-    "OriginatorConversationID": "a392-45d1-93c1-58f9447915e717138558",
-    "ConversationID": "AG_20250201_206051c643ca6389833f",
-    "TransactionID": "TB18E731YO",
-    "ResultParameters": {
-      "ResultParameter": [
-        {
-          "Key": "ReceiverPartyPublicName",
-          "Value": "0768899729 - Collins "
-        },
-        {
-          "Key": "TransactionCompletedDateTime",
-          "Value": "01.02.2025 21:28:54"
-        },
-        {
-          "Key": "B2CUtilityAccountAvailableFunds",
-          "Value": 6918.7
-        },
-        {
-          "Key": "B2CWorkingAccountAvailableFunds",
-          "Value": 0
-        },
-        {
-          "Key": "B2CRecipientIsRegisteredCustomer",
-          "Value": "Y"
-        },
-        {
-          "Key": "B2CChargesPaidAccountAvailableFunds",
-          "Value": 0
-        },
-        {
-          "Key": "TransactionAmount",
-          "Value": 10
-        },
-        {
-          "Key": "TransactionReceipt",
-          "Value": "TB18E731YO"
-        }
-      ]
-    },
-    "ReferenceData": {
-      "ReferenceItem": {
-        "Key": "QueueTimeoutURL",
-        "Value": "http://internalapi.safaricom.co.ke/mpesa/b2cresults/v1/submit"
-      }
-    }
-  }
+  "amount": 10,
+  "currency": "KES",
+  "externalId": "ImpadlTdest2",
+  "netAmount": 10,
+  "secureId": "ldFuXRQn_JmCVoili4ItEw==",
+  "transactionReport": "",
+  "transactionStatus": "COMPLETE"
 }
+          
 
 ```
 
-- **`transactionId`**: This is a unique identifier returned after initiating a payment. Use it to track the transaction status. It will be the same as the **`OriginatorConversationID`** provided in the callback. Use this ID to update your records accordingly.
+# Callback Failed  response 
+
+```json
+{
+  "amount": 10,
+  "currency": "KES",
+  "externalId": "ImpadlTdest2",
+  "netAmount": 10,
+  "secureId": "ldFuXRQn_JmCVoili4ItEw==",
+  "transactionReport": "",
+  "transactionStatus": "COMPLETE"
+}
+          
+
+```
+
+
 
 
 
