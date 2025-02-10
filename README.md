@@ -64,7 +64,7 @@ curl --location 'https://payments.mam-laka.com/api/v1' \
 {
     "message": "Payment initiation successful",
     "secureId": "qdml8553ZeInavKorBHzLA==",
-    "transactionId": ImpadlTdest2",
+    "transactionId": "ImpadlTdest2",
 }
 
 ```
