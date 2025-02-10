@@ -1,4 +1,4 @@
-# Mamlaka Hub and Spoke Payment API (v2)
+# Mamlaka Hub and Spoke Payment API (v2.0.1)
 
 **Author**  
 Collins 
@@ -74,12 +74,13 @@ curl --location 'https://payments.mam-laka.com/api/v1' \
 {
   "amount": 10,
   "currency": "KES",
-  "externalId": "ImpadlTdest2",
+  "externalId": "ImpadlTdest25",
   "netAmount": 10,
-  "secureId": "ldFuXRQn_JmCVoili4ItEw==",
-  "transactionReport": "",
+  "secureId": "i1FHTQgFpHP0g-MRacZXUQ==",
+  "transactionReport": "COMPLETE",
   "transactionStatus": "COMPLETE"
 }
+
           
 
 ```
@@ -89,12 +90,13 @@ curl --location 'https://payments.mam-laka.com/api/v1' \
 {
   "amount": 10,
   "currency": "KES",
-  "externalId": "ImpadlTdest2",
+  "externalId": "ImpadlTdest25",
   "netAmount": 10,
-  "secureId": "ldFuXRQn_JmCVoili4ItEw==",
-  "transactionReport": "",
+  "secureId": "6S4mi15UgO2xYkjjyqH4gA==",
+  "transactionReport": "FAILED",
   "transactionStatus": "FAILED"
 }
+
 
 ```
 
@@ -134,12 +136,16 @@ curl --location 'https://payments.mam-laka.com/api/v1' \
 {
   "amount": 10,
   "currency": "KES",
-  "externalId": "ImpadlTdest2",
+  "externalId": "joeltest404",
   "netAmount": 10,
-  "secureId": "ldFuXRQn_JmCVoili4ItEw==",
-  "transactionReport": "",
+  "receiverPartyPublicName": "07688XXXX - Collins Williams",
+  "secureId": "4p-LIGOa5iO-1xjDR_bZZg==",
+  "transactionCompletedDateTime": "11.02.2025 01:44:17",
+  "transactionReceipt": "TBB8KE0GQW",
+  "transactionReport": "COMPLETE",
   "transactionStatus": "COMPLETE"
 }
+
           
 
 ```
@@ -153,8 +159,8 @@ curl --location 'https://payments.mam-laka.com/api/v1' \
   "externalId": "ImpadlTdest2",
   "netAmount": 10,
   "secureId": "ldFuXRQn_JmCVoili4ItEw==",
-  "transactionReport": "",
-  "transactionStatus": "COMPLETE"
+  "transactionReport": "FAILED",
+  "transactionStatus": "FAILED"
 }
           
 
