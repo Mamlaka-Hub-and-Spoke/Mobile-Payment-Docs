@@ -60,7 +60,10 @@ curl --location 'https://payments.mam-laka.com/api/v1' \
 }
 
 
+
 ```
+![image](https://github.com/user-attachments/assets/fef0fb1e-bdec-4ded-9cbc-3e7d83f83a80)
+
 # Sample response 
 
 ```json
