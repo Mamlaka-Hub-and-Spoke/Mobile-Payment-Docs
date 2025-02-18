@@ -26,7 +26,8 @@ To perform API operations, you need to first generate a token using the username
 - **Method**: `POST`
 - **Headers**: 
   - `Authorization: Basic Y29sbHM6Y29tZXRhcHBtYWlu`
-  ![image](https://github.com/user-attachments/assets/e773e942-8ee3-457a-9330-11ab82bf25bb)
+![image](https://github.com/user-attachments/assets/59c97365-44f7-41cc-850a-b8016568b64e)
+
 
 
 #### Example cURL Request:
