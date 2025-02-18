@@ -165,8 +165,61 @@ curl --location 'https://payments.mam-laka.com/api/v1' \
           
 
 ```
+### Card Transaction
 
+**Endpoint:** `https://payments.mam-laka.com/api/v1/card/initiate`
 
+**Method:** `POST`
+
+```json
+{
+   "impalaMerchantId":"{{username}}",
+    "currency":"USD",
+    "amount":1,
+    "mobileMoneySP":"card",
+    "externalId":"ImpadlTdest2",
+    "callbackUrl":"https://8bd0-2c0f-fe38-2413-2c98-7114-6990-db59-11c.ngrok-free.app/mc/log.php"
+}
+
+```
+# Sample response 
+
+```json
+{
+    "cardLink": "http://commetagri.mam-laka.com/uba.php?data=YW1vdW50PTEuMDAmbWVyY2hhbnQ9YXBwJmNhbGxiYWNrPWh0dHBzOi8vOGJkMC0yYzBmLWZlMzgtMjQxMy0yYzk4LTcxMTQtNjk5MC1kYjU5LTExYy5uZ3Jvay1mcmVlLmFwcC9tYy9sb2cucGhwJnJlZGlyZWN0PU9XWEpKRFVNZ1B2aDlYUWhTQnk5eGc9PSZleHRlcm5hbGlkPUltcGFkbFRkZXN0Mg==",
+    "message": "card Payment  initiation successful",
+    "secureId": "OWXJJDUMgPvh9XQhSBy9xg=="
+}
+
+```
+# Card Callback Success  response 
+
+```json
+{
+ "transactionStatus":"COMPLETED",
+ "transactionReport":"SUCCESS",
+ "currency":"KES",
+ "amount":"5.00",
+ "netAmount":"5.00",
+ "secureId":"8e6bfa77-4f2a-4ff6-af48-ef774f2178ca",
+ "externalId":"BoomW",
+ "redirectUrl":"bRbHRh6Tmi1mBNUzKKTtzA=="
+}
+
+```
+# Card Callback Failed  response 
+
+```json
+{
+ "transactionStatus":"Failed",
+ "transactionReport":"N/A",
+ "currency":"KES",
+ "amount":"5.00",
+ "netAmount":"5.00",
+ "secureId":"8e6bfa77-4f2a-4ff6-af48-ef774f2178ca",
+ "externalId":"BoomW",
+ "redirectUrl":"bRbHRh6Tmi1mBNUzKKTtzA=="
+}
 
 
 
