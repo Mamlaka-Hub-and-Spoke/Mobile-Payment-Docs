@@ -218,7 +218,7 @@ curl --location 'https://payments.mam-laka.com/api/v1' \
 
 ```json
 {
- "transactionStatus":"Failed",
+ "transactionStatus":"FAILED",
  "transactionReport":"N/A",
  "currency":"KES",
  "amount":"5.00",
