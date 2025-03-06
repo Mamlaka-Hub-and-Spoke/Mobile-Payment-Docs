@@ -1,4 +1,4 @@
-# Mamlaka Hub and Spoke Payment API (v2.0.1)
+# Mamlaka Hub and Spoke Payment API (v2.0.2)
 
 **Author**  
 Collins 
@@ -185,6 +185,7 @@ curl --location 'https://payments.mam-laka.com/api/v1' \
     "amount":1,
     "mobileMoneySP":"card",
     "externalId":"ImpadlTdest2",
+     "redirectUrl":"backtoyoursite.com",
     "callbackUrl":"https://8bd0-2c0f-fe38-2413-2c98-7114-6990-db59-11c.ngrok-free.app/mc/log.php"
 }
 
