@@ -261,6 +261,7 @@ https://payments.mam-laka.com/api/v1/transaction?merchant=impala&secureId=d4XeBK
     "secure_id": "d4XeBKNruNJnvhOMOd8RLg==",
     "source_of_funds": "card",
     "transaction_report": "collection"
+    "transaction_status": "PENDING" //FAILED OR COMPLETED
   }
 }
 ```
