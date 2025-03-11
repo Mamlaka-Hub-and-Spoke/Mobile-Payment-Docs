@@ -228,8 +228,42 @@ curl --location 'https://payments.mam-laka.com/api/v1' \
  "externalId":"BoomW",
  "redirectUrl":"bRbHRh6Tmi1mBNUzKKTtzA=="
 }
+```
+# Check Transaction Status
+
+This document describes how to check the status of a transaction using the provided API endpoint.
+
+## Endpoint
 
 
+https://payments.mam-laka.com/api/v1/transaction?merchant=<your_merchant_id>&secureId=<secure_id>
+
+**Note:**
+
+* Replace `<your_merchant_id>` with your actual merchant ID.
+* Replace `<secure_id>` with the `secure_id` returned during transaction initialization.
+
+## Example Request
+
+https://payments.mam-laka.com/api/v1/transaction?merchant=impala&secureId=d4XeBKNruNJnvhOMOd8RLg==
+
+## Sample Response (JSON)
+
+```json
+{
+  "transaction": {
+    "amount": 1,
+    "callback_url": "[https://f0d6-197-232-22-252.ngrok-free.app](https://f0d6-197-232-22-252.ngrok-free.app)",
+    "currency": "USD",
+    "date_added": 1741675246,
+    "external_id": "ImpadlTdest2",
+    "impalaMerchantId": "impala",
+    "secure_id": "d4XeBKNruNJnvhOMOd8RLg==",
+    "source_of_funds": "card",
+    "transaction_report": "collection"
+  }
+}
+```
 
 
 
