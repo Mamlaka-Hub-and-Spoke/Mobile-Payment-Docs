@@ -23,7 +23,7 @@ To perform API operations, you need to first generate a token using the username
 
 #### API Endpoint to Generate Token
 - **URL**: `{{baseUrl}}/api/v1`
-- **Method**: `POST`
+- **Method**: `GET`
 - **Headers**: 
   - `Authorization: Basic Y29sbHM6Y29tZXRhcHBtYWlu`
 ![image](https://github.com/user-attachments/assets/5c9f6e7a-2e12-4f04-af3a-5feaf971ac94)
