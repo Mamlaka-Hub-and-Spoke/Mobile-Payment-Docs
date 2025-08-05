@@ -370,10 +370,10 @@ https://payments.mam-laka.com/api/v1/transaction?merchant=impala&secureId=d4XeBK
 
 ## Rate Limits
 
-- **Mobile APIs:** 100 requests per minute
-- **Card Transactions:** 50 requests per minute
-- **Balance APIs:** 200 requests per minute
-- **Transaction Status:** 300 requests per minute
+- **Mobile APIs:** 
+- **Card Transactions:** 
+- **Balance APIs:** 
+- **Transaction Status:** 
 
 ---
 
