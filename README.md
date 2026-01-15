@@ -13,10 +13,11 @@
    - [STK Push (C2B)](#stk-push-c2b)
    - [Money Transfer (B2C)](#money-transfer-b2c)
 3. [Card Transaction](#card-transaction)
-4. [Balance APIs](#balance-apis)
+4. [Bank Transfer](#bank-transfer)
+5. [Balance APIs](#balance-apis)
    - [Payins Balance](#payins-balance)
    - [Payouts Balance](#payouts-balance)
-5. [Transaction Status](#transaction-status)
+6. [Transaction Status](#transaction-status)
 
 ---
 
@@ -224,6 +225,75 @@ Process card payments through a secure payment gateway.
   "secureId": "8e6bfa77-4f2a-4ff6-af48-ef774f2178ca",
   "externalId": "BoomW",
   "redirectUrl": "bRbHRh6Tmi1mBNUzKKTtzA=="
+}
+```
+
+---
+
+## Bank Transfer
+
+Initiate a bank transfer payment request. This endpoint follows the same structure as the STK Push initiate endpoint, but uses bank-specific fields instead of mobile money fields.
+
+**Key Differences from Mobile Initiate:**
+- `mobileMoneySP` is replaced with `bankName` (the name of the bank)
+- `payerPhone` is replaced with `accountNumber` (the bank account number)
+
+#### Endpoint
+- **URL:** `{{BASE_URL}}/api/v1/bank/initiate`
+- **Method:** `POST`
+- **Headers:** `Authorization: Bearer <token>`
+
+#### Request Body
+```json
+{
+  "impalaMerchantId": "{{username}}",
+  "displayName": "AVIATOR",
+  "currency": "KES",
+  "amount": 10,
+  "accountNumber": "1234567890",
+  "bankName": "Equity Bank",
+  "externalId": "ImpadlTdest2",
+  "callbackUrl": "https://97e6-217-21-116-242.ngrok-free.app/"
+}
+```
+
+**Field Descriptions:**
+- `accountNumber`: The bank account number (replaces `payerPhone` from mobile initiate)
+- `bankName`: The name of the bank (replaces `mobileMoneySP` from mobile initiate)
+- All other fields remain the same as the mobile initiate endpoint
+
+#### Sample Response
+```json
+{
+  "message": "Payment initiation successful",
+  "secureId": "qdml8553ZeInavKorBHzLA==",
+  "transactionId": "ImpadlTdest2"
+}
+```
+
+#### Callback Success Response
+```json
+{
+  "amount": 10,
+  "currency": "KES",
+  "externalId": "ImpadlTdest25",
+  "netAmount": 10,
+  "secureId": "i1FHTQgFpHP0g-MRacZXUQ==",
+  "transactionReport": "COMPLETE",
+  "transactionStatus": "COMPLETE"
+}
+```
+
+#### Callback Failed Response
+```json
+{
+  "amount": 10,
+  "currency": "KES",
+  "externalId": "ImpadlTdest25",
+  "netAmount": 10,
+  "secureId": "6S4mi15UgO2xYkjjyqH4gA==",
+  "transactionReport": "FAILED",
+  "transactionStatus": "FAILED"
 }
 ```
 
