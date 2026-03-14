@@ -232,70 +232,90 @@ Process card payments through a secure payment gateway.
 
 ## Bank Transfer
 
-Initiate a bank transfer payment request. This endpoint follows the same structure as the STK Push initiate endpoint, but uses bank-specific fields instead of mobile money fields.
+### Bank Transfer (Payin) API
 
-**Key Differences from Mobile Initiate:**
-- `mobileMoneySP` is replaced with `bankName` (the name of the bank)
-- `payerPhone` is replaced with `accountNumber` (the bank account number)
+#### Initiate bank transfer
 
-#### Endpoint
-- **URL:** `{{BASE_URL}}/api/v1/bank/initiate`
-- **Method:** `POST`
-- **Headers:** `Authorization: Bearer <token>`
+**Endpoint:** `POST /api/v1/bank/payin`  
+**Auth:** `Authorization: Bearer <your-jwt>`
 
-#### Request Body
+#### Request body
+
+| Field           | Type   | Required | Description                                      |
+|-----------------|--------|----------|--------------------------------------------------|
+| `externalId`    | string | Yes      | Your unique reference for this transaction       |
+| `amount`        | int    | Yes      | Amount (e.g. 100)                                |
+| `currency`      | string | Yes      | e.g. `NGN`                                      |
+| `callbackUrl`   | string | Yes      | URL we will POST the result to when paid/failed  |
+| `customerName`  | string | Yes      | Payer name                                       |
+| `customerEmail` | string | Yes      | Payer email                                      |
+| `accountName`   | string | No       | Label shown to payer (default: "Payment")        |
+
+#### Example request
+
 ```json
 {
-  "impalaMerchantId": "{{username}}",
-  "displayName": "AVIATOR",
-  "currency": "KES",
-  "amount": 10,
-  "accountNumber": "1234567890",
-  "bankName": "Equity Bank",
-  "externalId": "ImpadlTdest2",
-  "callbackUrl": "https://97e6-217-21-116-242.ngrok-free.app/"
+  "externalId": "live0008990211932",
+  "amount": 100,
+  "currency": "NGN",
+  "accountName": "Demo account",
+  "callbackUrl": "https://your-app.com/callback",
+  "customerName": "John Doe",
+  "customerEmail": "johndoe@gmail.com"
 }
 ```
 
-**Field Descriptions:**
-- `accountNumber`: The bank account number (replaces `payerPhone` from mobile initiate)
-- `bankName`: The name of the bank (replaces `mobileMoneySP` from mobile initiate)
-- All other fields remain the same as the mobile initiate endpoint
+#### Example success response
 
-#### Sample Response
 ```json
 {
-  "message": "Payment initiation successful",
-  "secureId": "qdml8553ZeInavKorBHzLA==",
-  "transactionId": "ImpadlTdest2"
+  "secureId": "PSJRU873PGPI",
+  "externalId": "live0008990211932",
+  "status": "pending",
+  "message": "Bank transfer initiated. Customer should pay to the account below.",
+  "amount": 100,
+  "currency": "NGN",
+  "bankAccountName": "Demo account",
+  "bankAccountNumber": "5010875892",
+  "bankName": "vfd",
+  "bankCode": "566",
+  "expiryDate": "2026-03-14T01:26:36.263Z"
 }
 ```
 
-#### Callback Success Response
+Give the customer the bank details (account number, bank name/code, expiry) so they can complete the payment.
+
+---
+
+#### Callback (when payment is done)
+
+We send a `POST` request to your `callbackUrl` when the transfer succeeds or fails.
+
+**Success callback body:**
+
 ```json
 {
-  "amount": 10,
-  "currency": "KES",
-  "externalId": "ImpadlTdest25",
-  "netAmount": 10,
-  "secureId": "i1FHTQgFpHP0g-MRacZXUQ==",
+  "amount": 100,
+  "currency": "NGN",
+  "externalId": "live0008990211932",
+  "netAmount": 99,
+  "secureId": "PSJRU873PGPI",
   "transactionReport": "COMPLETE",
   "transactionStatus": "COMPLETE"
 }
 ```
 
-#### Callback Failed Response
-```json
-{
-  "amount": 10,
-  "currency": "KES",
-  "externalId": "ImpadlTdest25",
-  "netAmount": 10,
-  "secureId": "6S4mi15UgO2xYkjjyqH4gA==",
-  "transactionReport": "FAILED",
-  "transactionStatus": "FAILED"
-}
-```
+| Field              | Description                          |
+|--------------------|--------------------------------------|
+| `transactionStatus`| `COMPLETE` on success                |
+| `transactionReport`| `COMPLETE` on success                |
+| `secureId`         | Our internal reference              |
+| `externalId`       | The reference you sent in the request |
+| `amount`           | Original amount                      |
+| `netAmount`        | Amount after fees                    |
+| `currency`         | e.g. `NGN`                           |
+
+**Failed callback:** On failure we send the same fields with `transactionStatus` and `transactionReport` set to `FAILED`, and an extra `reason` field with the failure message.
 
 ---
 
