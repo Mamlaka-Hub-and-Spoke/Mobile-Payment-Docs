@@ -9,9 +9,17 @@
 ## Table of Contents
 
 1. [Authentication](#authentication)
-2. [Mobile APIs](#mobile-apis)
-   - [STK Push (C2B)](#stk-push-c2b)
-   - [Money Transfer (B2C)](#money-transfer-b2c)
+2. [Mobile Money APIs](#mobile-money-apis)
+   - [Kenya (KES)](#kenya-kes)
+     - [Collection (Payin)](#collection-payin)
+     - [Payout (Withdrawal)](#payout-withdrawal)
+   - [Senegal (XOF)](#senegal-xof)
+     - [Collection (Payin)](#collection-payin-1)
+     - [Payout (Withdrawal)](#payout-withdrawal-1)
+     - [Merchant Callback Format (Our API -> Merchant)](#merchant-callback-format-our-api---merchant)
+   - [Rwanda (RWF)](#rwanda-rwf)
+     - [Collection (Payin)](#collection-payin-2)
+     - [Merchant Callback Format (Our API -> Merchant)](#merchant-callback-format-our-api---merchant-1)
 3. [Card Transaction](#card-transaction)
 4. [Bank Transfer](#bank-transfer)
 5. [Balance APIs](#balance-apis)
@@ -43,18 +51,25 @@ curl --location 'https://payments.mam-laka.com/api/v1' \
 
 ---
 
-## Mobile APIs
+## Mobile Money APIs
 
-### STK Push (C2B)
+Merchant-facing endpoints remain consistent across countries. Use:
+
+- `POST /api/v1/mobile/initiate` for collection (payin)
+- `POST /api/v1/mobile/transfer` for payout (withdrawal)
+
+### Kenya (KES)
+
+#### Collection (Payin)
 
 Initiate an STK push to request payment from a customer's mobile money account.
 
-#### Endpoint
+##### Endpoint
 - **URL:** `{{BASE_URL}}/api/v1/mobile/initiate`
 - **Method:** `POST`
 - **Headers:** `Authorization: Bearer <token>`
 
-#### Request Body
+##### Request Body
 ```json
 {
   "impalaMerchantId": "{{username}}",
@@ -68,7 +83,7 @@ Initiate an STK push to request payment from a customer's mobile money account.
 }
 ```
 
-#### Sample Response
+##### Sample Response
 ```json
 {
   "message": "Payment initiation successful",
@@ -77,7 +92,7 @@ Initiate an STK push to request payment from a customer's mobile money account.
 }
 ```
 
-#### Callback Success Response
+##### Callback Success Response
 ```json
 {
   "amount": 10,
@@ -90,7 +105,7 @@ Initiate an STK push to request payment from a customer's mobile money account.
 }
 ```
 
-#### Callback Failed Response
+##### Callback Failed Response
 ```json
 {
   "amount": 10,
@@ -107,16 +122,16 @@ Initiate an STK push to request payment from a customer's mobile money account.
 
 ---
 
-### Money Transfer (B2C)
+#### Payout (Withdrawal)
 
 Transfer money from your merchant account to a customer's mobile money account.
 
-#### Endpoint
+##### Endpoint
 - **URL:** `{{BASE_URL}}/api/v1/mobile/transfer`
 - **Method:** `POST`
 - **Headers:** `Authorization: Bearer <token>`
 
-#### Request Body
+##### Request Body
 ```json
 {
   "impalaMerchantId": "{{username}}",
@@ -129,7 +144,7 @@ Transfer money from your merchant account to a customer's mobile money account.
 }
 ```
 
-#### Sample Response
+##### Sample Response
 ```json
 {
   "message": "Payment initiation successful",
@@ -138,7 +153,7 @@ Transfer money from your merchant account to a customer's mobile money account.
 }
 ```
 
-#### Callback Success Response
+##### Callback Success Response
 ```json
 {
   "amount": 10,
@@ -154,7 +169,7 @@ Transfer money from your merchant account to a customer's mobile money account.
 }
 ```
 
-#### Callback Failed Response
+##### Callback Failed Response
 ```json
 {
   "amount": 10,
@@ -164,6 +179,215 @@ Transfer money from your merchant account to a customer's mobile money account.
   "secureId": "ldFuXRQn_JmCVoili4ItEw==",
   "transactionReport": "FAILED",
   "transactionStatus": "FAILED"
+}
+```
+
+---
+
+### Senegal (XOF)
+
+This section describes Senegal support added to the existing APIs using the same merchant-facing structure.
+
+Supported providers:
+
+- `WAVE`
+- `ORANGE-MONEY`
+
+#### Collection (Payin)
+
+##### Endpoint
+
+- **Method:** `POST`
+- **URL:** `/api/v1/mobile/initiate`
+- **Auth:** `Authorization: Bearer <merchant-jwt>`
+
+##### Request (Wave)
+
+```json
+{
+  "impalaMerchantId": "your-merchant-id",
+  "currency": "XOF",
+  "amount": 200,
+  "payerPhone": "776389999",
+  "mobileMoneySP": "WAVE",
+  "externalId": "SN-IN-001",
+  "callbackUrl": "https://your-domain.com/merchant-callback"
+}
+```
+
+##### Request (Orange Money)
+
+`om_otp` is required for Orange Money collection.
+
+```json
+{
+  "impalaMerchantId": "your-merchant-id",
+  "currency": "XOF",
+  "amount": 200,
+  "payerPhone": "776389999",
+  "mobileMoneySP": "ORANGE-MONEY",
+  "om_otp": "434593",
+  "externalId": "SN-IN-002",
+  "callbackUrl": "https://your-domain.com/merchant-callback"
+}
+```
+
+##### Phone format
+
+Senegal numbers are accepted in both formats:
+
+- With country code: `+221776389999` or `221776389999`
+- Without country code: `776389999`
+
+##### Response (Our API)
+
+The response format stays the same and includes `redirectUrl` when the provider returns `sms_link`.
+
+```json
+{
+  "message": "Payment initiation successful",
+  "externalId": "SN-IN-001",
+  "secureId": "qdml8553ZeInavKorBHzLA==",
+  "redirectUrl": "https://pay.wave.com/..."
+}
+```
+
+#### Payout (Withdrawal)
+
+##### Endpoint
+
+- **Method:** `POST`
+- **URL:** `/api/v1/mobile/transfer`
+- **Auth:** `Authorization: Bearer <merchant-jwt>`
+
+##### Request
+
+For Senegal payouts, pass `mobileMoneySP` as `WAVE` or `ORANGE-MONEY`.
+
+```json
+{
+  "impalaMerchantId": "your-merchant-id",
+  "currency": "XOF",
+  "amount": 200,
+  "recipientPhone": "776389999",
+  "mobileMoneySP": "WAVE",
+  "externalId": "SN-OUT-001",
+  "callbackUrl": "https://your-domain.com/merchant-callback"
+}
+```
+
+##### Response (Our API)
+
+```json
+{
+  "message": "Payment initiation successful",
+  "externalId": "SN-OUT-001",
+  "secureId": "i1FHTQgFpHP0g-MRacZXUQ==",
+  "redirectUrl": "https://pay.wave.com/..."
+}
+```
+
+#### Merchant Callback Format (Our API -> Merchant)
+
+##### Success
+
+```json
+{
+  "amount": 10,
+  "currency": "XOF",
+  "externalId": "SN-OUT-001",
+  "secureId": "i1FHTQgFpHP0g-MRacZXUQ==",
+  "transactionReport": "COMPLETE",
+  "transactionStatus": "COMPLETE"
+}
+```
+
+##### Failed / Declined
+
+```json
+{
+  "amount": 10,
+  "currency": "XOF",
+  "externalId": "SN-OUT-001",
+  "secureId": "6S4mi15UgO2xYkjjyqH4gA==",
+  "transactionReport": "FAILED",
+  "transactionStatus": "FAILED"
+}
+```
+
+`reason` may be included for failed callbacks when available.
+
+---
+
+### Rwanda (RWF)
+
+This section describes Rwanda Flutterwave mobile money collection support added to the existing API:
+
+- `POST /api/v1/mobile/initiate` (collection)
+
+The merchant-facing API format remains the same as other channels.
+
+#### Collection (Payin)
+
+##### Endpoint
+
+- **Method:** `POST`
+- **URL:** `/api/v1/mobile/initiate`
+- **Auth:** `Authorization: Bearer <merchant-jwt>`
+
+##### Request
+
+```json
+{
+  "impalaMerchantId": "your-merchant-id",
+  "displayName": "TWD",
+  "currency": "RWF",
+  "amount": 5000,
+  "payerPhone": "2507XXXXXXXX",
+  "mobileMoneySP": "MTN",
+  "externalId": "RWF-IN-001",
+  "callbackUrl": "https://your-domain.com/merchant-callback"
+}
+```
+
+##### Response (Our API)
+
+```json
+{
+  "message": "Payment initiation successful",
+  "transactionId": "....",
+  "secureId": "...."
+}
+```
+
+#### Merchant Callback Format (Our API -> Merchant)
+
+We preserve the same callback structure used in other channels.
+
+##### Success
+
+```json
+{
+  "transactionStatus": "COMPLETE",
+  "transactionReport": "COMPLETE",
+  "currency": "RWF",
+  "amount": 5000,
+  "secureId": "....",
+  "externalId": "...."
+}
+```
+
+##### Failed
+
+```json
+{
+  "transactionStatus": "FAILED",
+  "transactionReport": "FAILED",
+  "currency": "RWF",
+  "amount": 5000,
+  "secureId": "....",
+  "externalId": "....",
+  "reason": "failure reason"
 }
 ```
 
