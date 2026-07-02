@@ -15,9 +15,45 @@ The Mamlaka Payment API lets merchants initiate and track:
 - Mobile money payouts: merchant sends funds to customer
 - Till and paybill payouts
 - Airtime disbursement
-- Card, bank, and provider-based payments
+- KES PesaLink bank transfers
+- Card and provider-based payments
 - Wallet balance checks
 - Transaction status lookup
+
+## Navigation
+
+Use this menu to jump straight to the integration you need.
+
+| Section | Use it for |
+|---|---|
+| [Authentication](#authentication) | Generate and use your merchant JWT |
+| [Payment Methods at a Glance](#payment-methods-at-a-glance) | Compare endpoints, currencies, and wallets quickly |
+| [Standard Response Fields](#standard-response-fields) | Understand the common initiation response |
+| [Mobile Money Collection](#mobile-money-collection) | Collect money from a customer |
+| [Mobile Money Payout](#mobile-money-payout) | Send mobile money to a customer |
+| [KES PesaLink Bank Transfer](#kes-pesalink-bank-transfer) | Send KES to a Kenyan bank account |
+| [Airtime Disbursement](#airtime-disbursement) | Send airtime to a customer phone number |
+| [Till Payment](#till-payment) | Pay a till from the payout wallet |
+| [Paybill Payment](#paybill-payment) | Pay a paybill from the payout wallet |
+| [Test Transactions](#test-transactions) | Use simulator values for testing |
+| [Balance APIs](#balance-apis) | Check payin and payout wallet balances |
+| [Transaction Search](#transaction-search) | Search and filter transactions |
+| [Stale Pending Transactions](#stale-pending-transactions) | Fail old pending transactions |
+| [Limits](#limits) | Understand transaction limits |
+| [Status and Reporting Standard](#status-and-reporting-standard) | Interpret statuses and reports |
+| [Common Errors](#common-errors) | Handle common API errors |
+| [JSON Reminder](#json-reminder) | Avoid invalid JSON request bodies |
+
+## Payment Methods at a Glance
+
+| Method | Endpoint | Currency | Wallet |
+|---|---|---|---|
+| Mobile money collection | `POST /api/v1/mobile/initiate` | `KES` and enabled currencies | Payin |
+| Mobile money payout | `POST /api/v1/mobile/transfer` | `KES` and enabled currencies | Payout |
+| KES PesaLink bank transfer | `POST /api/v1/bank/pesalink/payout` | `KES` | Payout |
+| Airtime disbursement | `POST /api/v1/mobile/airtime` | `ARTM` | Airtime |
+| Till payment | `POST /api/v1/till/payment` | `KES` | Payout |
+| Paybill payment | `POST /api/v1/paybill/payment` | `KES` | Payout |
 
 All merchant-facing transaction statuses are standardized:
 
@@ -205,6 +241,100 @@ Content-Type: application/json
   "externalId": "PAYOUT-001",
   "secureId": "qdml8553ZeInavKorBHzLA==",
   "transactionReport": "FAILED",
+  "transactionStatus": "FAILED"
+}
+```
+
+---
+
+## KES PesaLink Bank Transfer
+
+Use this endpoint to send KES from the merchant payout wallet to a Kenyan bank account through PesaLink.
+
+### Endpoint
+
+```http
+POST /api/v1/bank/pesalink/payout
+Authorization: Bearer <token>
+Content-Type: application/json
+```
+
+### Required Fields
+
+| Field | Description | Example |
+|---|---|---|
+| `externalId` | Your unique transaction reference. Do not reuse it for another transaction. | `BANK-001` |
+| `amount` | Amount to transfer. Send it as a string or number based on your integration. | `10` |
+| `currency` | Transfer currency. For PesaLink bank transfer, use `KES`. | `KES` |
+| `bankCode` | Destination bank code. | `0057` |
+| `creditAccount` | Destination bank account number. | `00106534176150` |
+| `callbackUrl` | Your webhook URL for the final transaction result. | `https://merchant.example.com/callback` |
+| `narration` | Description shown for the transfer. | `Supplier payment` |
+
+### Request
+
+```json
+{
+  "externalId": "BANK-001",
+  "amount": "10",
+  "currency": "KES",
+  "bankCode": "0057",
+  "creditAccount": "00106534176150",
+  "callbackUrl": "https://merchant.example.com/callback",
+  "narration": "Test to Jimmy account"
+}
+```
+
+### cURL Example
+
+```bash
+curl --location 'https://payments.mam-laka.com/api/v1/bank/pesalink/payout' \
+  --header 'Content-Type: application/json' \
+  --header 'Authorization: Bearer <token>' \
+  --data '{
+    "externalId": "BANK-001",
+    "amount": "10",
+    "currency": "KES",
+    "bankCode": "0057",
+    "creditAccount": "00106534176150",
+    "callbackUrl": "https://merchant.example.com/callback",
+    "narration": "Test to Jimmy account"
+  }'
+```
+
+### Response
+
+```json
+{
+  "message": "Payment initiation successful",
+  "externalId": "BANK-001",
+  "secureId": "qdml8553ZeInavKorBHzLA=="
+}
+```
+
+### Merchant Callback: Complete
+
+```json
+{
+  "amount": 10,
+  "currency": "KES",
+  "externalId": "BANK-001",
+  "secureId": "qdml8553ZeInavKorBHzLA==",
+  "transactionReceipt": "PESALINK12345",
+  "transactionReport": "withdraw",
+  "transactionStatus": "COMPLETE"
+}
+```
+
+### Merchant Callback: Failed
+
+```json
+{
+  "amount": 10,
+  "currency": "KES",
+  "externalId": "BANK-001",
+  "secureId": "qdml8553ZeInavKorBHzLA==",
+  "transactionReport": "withdraw",
   "transactionStatus": "FAILED"
 }
 ```
